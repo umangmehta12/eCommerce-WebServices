@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="robots" content="all,follow" />
+
+    <link rel="stylesheet" media="screen,projection" type="text/css" href="../css/main.css" />
+    <!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="../css/main-msie.css" /><![endif]-->
+    <link rel="stylesheet" media="screen,projection" type="text/css" href="../css/scheme.css" />
+    <link rel="stylesheet" media="print" type="text/css" href="../css/print.css" />
+
+    <title>eDeal | Find your best deals here</title>
+</head>
+
+<body>
+
+<div id="main">
+
+    <!-- Header -->
+    <div id="header">
+
+        <!-- Your logo -->
+        <h1 id="logo"><a href="#">e <span>Deal</span> </a></h1>
+        <hr class="noscreen" />        
+
+        <!-- Your slogan -->
+        <div id="slogan">Find the best deals on web</div>
+        <hr class="noscreen" />        
+        
+        <!-- Hidden navigation -->
+        <p class="noscreen noprint"><em>Quick links: <a href="#content">content</a>, <a href="#nav">navigation</a>.</em></p>
+        <hr class="noscreen" />
+
+    </div> <!-- /header -->
+
+    <!-- Navigation -->
+    <div id="nav">
+    
+        <ul class="box">
+            <li><a href="http://localhost:8080/edeal/index.html">Homepage</a></li> <!-- Active page (highlighted) -->
+            <li><a href="http://localhost:8080/edeal/admin.html">Admin</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/category.html">Category</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/usertype.html">Usertype</a>	</li>
+            <li><a href="http://localhost:8080/edeal/admin/producer.html">Producer</a>	</li>
+            <li><a href="http://localhost:8080/edeal/admin/preferredsite.html">Preferred Site</a></li>
+            <li id="nav-active"><a href="http://localhost:8080/edeal/admin/user.html">User</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/product.html">Product</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/deals.html">Deals</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/alldeals.html">All Deals</a></li>
+        </ul>
+        
+    <hr class="noscreen" /> 
+    </div> <!-- /nav -->
+
+    <!-- 2 columns (content + sidebar) -->
+    <div id="cols" class="box">
+
+        <!-- Content -->
+        <div id="content">
+          <h2 id="content-title">Users</h2>                    
+            <div id="content-in">
+<table>
+      <tr>
+      	<td>Id:	</td><td><input name="id"/></td>
+      </tr>
+      <tr>
+      	<td>User Name:</td><td><input name="username"/></td>
+      </tr>	
+      <tr>
+      	<td>Password:</td><td><input name="password"/></td>
+      </tr>	
+      <tr>
+      	<td>First Name:	</td><td><input name="firstname"/></td>
+      </tr>
+      <tr>	
+      	<td>Last Name:	</td><td><input name="lastname"/></td>
+      </tr>	
+      <tr>
+      	<td>Email:	</td><td><input name="email"/></td>
+      </tr>
+      <tr>	
+      	<td>Phone:	</td><td><input name="phone"/></td>
+      </tr>
+      <tr>	
+      	<td>Status:	</td><td><input name="userstatus"/></td>
+      </tr>
+      <tr>	
+      	<td>User Type:	</td><td><input name="usertype"/></td>
+      </tr>
+      </table>
+                <!-- 3 sections -->
+                
+<button name="loadAll">	Search All</button>
+<button name="load">		Search		</button>
+<button name="save">		Save		</button>
+<button name="update">	Update	</button>
+<button name="delete">	Delete	</button>
+
+<table id="result"  class="nomb table-style01">
+	<thead>
+		<tr><th>Id</th><th>User Name</th><th>Password</th><th>First Name</th> <th>Last Name</th>
+		<th>Email</th><th>Phone</th> <th>Status</th> <th>User type</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+       <script src="../js/jquery.js"></script>
+<script>
+
+	$("button").click(handler);
+	
+	function handler() {
+		var button = $(this);
+		var buttonName = button.attr("name");
+		var id = $("[name=id]").val();
+		var applicationObj = {
+			"id"   			: id,
+			"username"   	: $("[name=username]").val(),
+			"password"   	: $("[name=password]").val(),
+			"firstname"   	: $("[name=firstname]").val(),
+			"lastname"   	: $("[name=lastname]").val(),
+			"email"   		: $("[name=email]").val(),
+			"phone"   		: $("[name=phone]").val(),
+			"userstatus"   	: $("[name=userstatus]").val(),
+			"usertype"		: $("[name=usertype]").val()
+		}
+		var applicationStr = JSON.stringify(applicationObj);
+
+		var baseUrl = "http://localhost:8080/edeal/rest/user/";
+		var url = baseUrl;
+		var type = "GET";
+		if(buttonName == "load" || buttonName == "delete")
+			url += id;
+		if(buttonName == "load" || buttonName == "loadAll")
+			type = "GET";
+		if(buttonName == "save")
+			type = "PUT";
+		if(buttonName == "update")
+			type = "POST";
+		if(buttonName == "delete")
+			type = "DELETE";
+		
+		$.ajax({
+			"url"			: url,
+			"data"			: applicationStr,
+			"type"			: type,
+			"contentType"	: "application/json; charset=utf-8",
+			"success" : function(response) {
+				console.log(response);
+				if(typeof response == "object") {
+					var table = $("[id=result]");
+					var tbody = table.find("tbody");
+					tbody.empty();
+					if(typeof response.length == "undefined") {
+						$("[name=id]")    	.val(response.id);
+						$("[name=username]")    	.val(response.username);
+						$("[name=password]")    	.val(response.password);
+						$("[name=firstname]")    	.val(response.firstname);
+						$("[name=lastname]")    	.val(response.lastname);
+						$("[name=email]")    	.val(response.email);
+						$("[name=phone]")    	.val(response.phone);
+						$("[name=userstatus]")	.val(response.userstatus);
+						$("[name=usertype]")	.val(response.usertype);
+						response = [response];
+					}
+					for(var row=0; row<response.length; row++) {
+						var tr       = $("<tr>");
+						var idTd     = $("<td>").append(response[row].id);
+						var unameTd   = $("<td>").append(response[row].username);
+						var passTd   = $("<td>").append(response[row].password);
+						var fnameTd   = $("<td>").append(response[row].firstname);
+						var lnameTd   = $("<td>").append(response[row].lastname);
+						var emailTd   = $("<td>").append(response[row].email);
+						var phoneTd   = $("<td>").append(response[row].phone);
+						var statusTd   = $("<td>").append(response[row].userstatus);
+						var typeTd   = $("<td>").append(response[row].usertype);
+						tr.append(idTd);
+						tr.append(unameTd);
+						tr.append(passTd);
+						tr.append(fnameTd);
+						tr.append(lnameTd);
+						tr.append(emailTd);
+						tr.append(phoneTd);
+						tr.append(statusTd);
+						tr.append(typeTd);
+						tbody.append(tr);
+					}
+				}
+			}
+		});
+	}
+</script>         
+
+            </div> <!-- /content-in -->
+               
+        </div> <!-- /content -->
+
+        <hr class="noscreen" />
+
+        <!-- Sidebar -->
+        <div id="aside">
+
+            <!-- News -->                    
+            <h4 id="aside-title">News</h4>
+            
+            <div class="aside-in">
+                <div class="aside-box">
+
+                                   
+                </div> <!-- /aside-box -->
+            </div> <!-- /aside-in -->
+            
+               <!-- Contact -->
+            <h4 class="title">Contact</h4>
+
+            <div class="aside-in">
+                <div class="aside-box">
+
+                    <address>
+                        <strong>eDeal</strong><br />
+                        Boston, MA 02125<br />
+                        <a href="#">hello@email.com</a>
+                    </address>
+
+                </div> <!-- /aside-box -->
+            </div> <!-- /aside-in -->
+   
+        </div> <!-- /aside -->
+    
+    </div> <!-- /cols -->
+    
+    <div id="cols-bottom"></div>
+
+    <hr class="noscreen" />
+    
+    <!-- Footer -->
+    <div id="footer">
+
+        
+        
+        <p>&copy;&nbsp;2013 <a href="#">eDeal</a></p>
+
+    </div> <!-- /footer -->
+
+</div> <!-- /main -->
+
+</body>
+</html>
+
+
+
+
+
+
+
+  
+

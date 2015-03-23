@@ -1,0 +1,265 @@
+
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="robots" content="all,follow" />
+
+    <link rel="stylesheet" media="screen,projection" type="text/css" href="../css/main.css" />
+    <!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="../css/main-msie.css" /><![endif]-->
+    <link rel="stylesheet" media="screen,projection" type="text/css" href="../css/scheme.css" />
+    <link rel="stylesheet" media="print" type="text/css" href="../css/print.css" />
+
+    <title>eDeal | Find your best deals here</title>
+</head>
+
+<body>
+
+<div id="main">
+
+    <!-- Header -->
+    <div id="header">
+
+        <!-- Your logo -->
+        <h1 id="logo"><a href="#">e <span>Deal</span> </a></h1>
+        <hr class="noscreen" />        
+
+        <!-- Your slogan -->
+        <div id="slogan">Find the best deals on web</div>
+        <hr class="noscreen" />        
+        
+        <!-- Hidden navigation -->
+        <p class="noscreen noprint"><em>Quick links: <a href="#content">content</a>, <a href="#nav">navigation</a>.</em></p>
+        <hr class="noscreen" />
+
+    </div> <!-- /header -->
+
+    <!-- Navigation -->
+    <div id="nav">
+    
+        <ul class="box">
+            <li><a href="http://localhost:8080/edeal/index.html">Homepage</a></li> <!-- Active page (highlighted) -->
+            <li><a href="http://localhost:8080/edeal/admin.html">Admin</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/category.html">Category</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/usertype.html">Usertype</a>	</li>
+            <li><a href="http://localhost:8080/edeal/admin/producer.html">Producer</a>	</li>
+            <li><a href="http://localhost:8080/edeal/admin/preferredsite.html">Preferred Site</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/user.html">User</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/product.html">Product</a></li>
+            <li><a href="http://localhost:8080/edeal/admin/deals.html">Deals</a></li>
+            <li id="nav-active"><a href="http://localhost:8080/edeal/admin/alldeal.html">All Deals</a></li>
+        </ul>
+        
+    <hr class="noscreen" /> 
+    </div> <!-- /nav -->
+
+    <!-- 2 columns (content + sidebar) -->
+    <div id="cols" class="box">
+
+        <!-- Content -->
+        <div id="content">
+              <h2 id="content-title">All Deals</h2>
+                    
+            <div id="content-in">
+       
+            <table>
+      <tr>
+      	<td>Id:	</td> <td><input name="id"/></td>
+      </tr>
+      <tr>
+      	<td>Product Name:</td> <td><input name="prodname"/></td>
+      </tr>	
+      <tr>
+      	<td>Producer Name:</td> <td><input name="prdcname"/></td>
+      </tr>	
+      <tr>
+      	<td>Site Name:</td> <td><input name="stname"/></td>
+      </tr>	
+      <tr>
+      	<td>Category:</td> <td><input name="catgory"/></td>
+      </tr>	
+      <tr>
+      	<td>Description:</td> <td><input name="descrp"/></td>
+      </tr>	
+      <tr>	
+      	<td>Original Price:	</td><td><input name="originalprice"/></td>
+      </tr>	
+      <tr>	
+      	<td>Offered Price:	</td><td><input name="offeredprice"/></td>
+      </tr>	
+      <tr>	
+      	<td>Site Url:	</td><td><input name="siteurl"/></td>
+      </tr>	
+      </table>
+                <!-- 3 sections -->
+                
+<button name="loadAll">	Search All</button>
+<button name="load">		Search		</button>
+<button name="save">		Save		</button>
+<button name="update">	Update	</button>
+<button name="delete">	Delete	</button>
+
+<table id="result"  class="nomb table-style01">
+	<thead>
+		<tr><th>Id</th><th>Product Name</th><th>Producer Name</th><th>Site Name</th><th>Category</th><th>Description</th>
+		<th>Original Price</th><th>Offered Price</th> <th>Site Url</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+    <script src="../js/jquery.js"></script>
+<script>
+
+	$("button").click(handler);
+	
+	function handler() {
+		var button = $(this);
+		var buttonName = button.attr("name");
+		var id = $("[name=id]").val();
+		var applicationObj = {
+			"id"   			: id,
+			"prodname"   	: $("[name=prodname]").val(),
+			"prdcname"   		: $("[name=prdcname]").val(),
+			"stname"   		: $("[name=stname]").val(),
+			"catgory"   		: $("[name=catgory]").val(),
+			"descrp"   		: $("[name=descrp]").val(),
+			"originalprice"   		: $("[name=originalprice]").val(),
+			"offeredprice"   		: $("[name=offeredprice]").val(),
+			"siteurl"   		: $("[name=siteurl]").val()
+		}
+		var applicationStr = JSON.stringify(applicationObj);
+
+		var baseUrl = "http://localhost:8080/edeal/rest/alldeals/";
+		var url = baseUrl;
+		var type = "GET";
+		if(buttonName == "load" || buttonName == "delete")
+			url += id;
+		if(buttonName == "load" || buttonName == "loadAll")
+			type = "GET";
+		if(buttonName == "save")
+			type = "PUT";
+		if(buttonName == "update")
+			type = "POST";
+		if(buttonName == "delete")
+			type = "DELETE";
+		
+		$.ajax({
+			"url"			: url,
+			"data"			: applicationStr,
+			"type"			: type,
+			"contentType"	: "application/json; charset=utf-8",
+			"success" : function(response) {
+				console.log(response);
+				if(typeof response == "object") {
+					var table = $("[id=result]");
+					var tbody = table.find("tbody");
+					tbody.empty();
+					if(typeof response.length == "undefined") {
+						$("[name=id]")    	.val(response.id);
+						$("[name=prodname]")    	.val(response.prodname);
+						$("[name=prdcname]")    	.val(response.prdcname);
+						$("[name=stname]")    	.val(response.stname);
+						$("[name=catgory]")    	.val(response.catgory);
+						$("[name=descrp]")    	.val(response.descrp);
+						$("[name=originalprice]")    	.val(response.originalprice);
+						$("[name=offeredprice]")   	.val(response.offeredprice);
+						$("[name=siteurl]")   	.val(response.siteurl);
+						response = [response];
+					}
+					for(var row=0; row<response.length; row++) {
+						var tr       = $("<tr>");
+						var idTd     = $("<td>").append(response[row].id);
+						var prodTd   = $("<td>").append(response[row].prodname);
+						var prodcuerTd   = $("<td>").append(response[row].prdcname);
+						var siteTd   = $("<td>").append(response[row].stname);
+						var catTd   = $("<td>").append(response[row].catgory);
+						var desTd   = $("<td>").append(response[row].descrp);
+						var priceTd   = $("<td>").append(response[row].originalprice);
+						var offTd   = $("<td>").append(response[row].offeredprice);
+						var urlTd   = $("<td>").append(response[row].siteurl);
+						tr.append(idTd);
+						tr.append(prodTd);
+						tr.append(prodcuerTd);
+						tr.append(siteTd);
+						tr.append(catTd);
+						tr.append(desTd);
+						tr.append(priceTd);
+						tr.append(offTd);
+						tr.append(urlTd);
+						tbody.append(tr);
+					}
+				}
+			}
+		});
+	}
+</script>       
+
+            </div> <!-- /content-in -->
+               
+        </div> <!-- /content -->
+
+        <hr class="noscreen" />
+
+        <!-- Sidebar -->
+        <div id="aside">
+
+            <!-- News -->                    
+            <h4 id="aside-title">Ads</h4>
+            
+            <div class="aside-in">
+                <div class="aside-box">
+
+                    
+                
+                </div> <!-- /aside-box -->
+            </div> <!-- /aside-in -->
+            
+               <!-- Contact -->
+            <h4 class="title">Contact</h4>
+
+            <div class="aside-in">
+                <div class="aside-box">
+
+                    <address>
+                        <strong>eDeal</strong><br />
+                        Boston, MA 02125<br />
+                        <a href="#">hello@email.com</a>
+                    </address>
+
+                </div> <!-- /aside-box -->
+            </div> <!-- /aside-in -->
+   
+        </div> <!-- /aside -->
+    
+    </div> <!-- /cols -->
+    
+    <div id="cols-bottom"></div>
+
+    <hr class="noscreen" />
+    
+    <!-- Footer -->
+    <div id="footer">
+
+        
+        
+        <p>&copy;&nbsp;2013 <a href="#">eDeal</a></p>
+
+    </div> <!-- /footer -->
+
+</div> <!-- /main -->
+
+</body>
+</html>
+
+
+
+
+
+
+
+  
+
